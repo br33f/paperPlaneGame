@@ -9,7 +9,7 @@ import worlds.World;
 public class Obstacle extends Entity
 {
 	//attributes
-	public static int colors[][] = {{111,183,214},{187,214,111},{170,116,222},{215,178,113},{222,117,174}};
+	public static int colors[][] = {{111,183,214},{187,214,111},{170,116,222},{215,178,113},{255,186,101},{222,117,174}};
 	private float speedX, speedY;
 	private int colorVariant;
 	

@@ -16,6 +16,7 @@ public class GameState extends State
 {
 	//attributes
 	public static BufferedImage background = ImageLoader.loadImage("");
+	public static int colors[][] =  {{233,237,253}};
 	private Player player;
 	private World world;
 
@@ -37,6 +38,8 @@ public class GameState extends State
 
 	public void render(Graphics g) 
 	{
+		g.setColor(new Color(GameState.colors[0][0] / 255.0f, GameState.colors[0][1] / 255.0f, GameState.colors[0][2] / 255.0f));
+		g.fillRect(0, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
 		g.drawImage(GameState.background, 0, 0, 640, 640, null);
 
 		this.world.render(g);

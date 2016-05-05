@@ -1,7 +1,7 @@
 package entities;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
+import java.awt.geom.Line2D;
 
 
 import gameProj.Game;
@@ -48,7 +48,6 @@ public class Player extends Creature
         super.move();
     }
 
-
     private void calculateRotationPoint()
     {
         this.rotX = this.x + this.width/2;
@@ -58,7 +57,7 @@ public class Player extends Creature
 	private void getInput()
 	{
 		this.xMove = 0;
-        this.yMove = this.speed;
+        this.yMove = this.speed/2;
 		
 		//this.yMove -= this.speed;
 		if(game.getKeyManager().up)
@@ -73,20 +72,34 @@ public class Player extends Creature
 	public void render(Graphics g) 
 	{
 		int colorIdx = 0;
-		g.setColor(new Color((((float)Player.colors[colorIdx][0]) / 255.0f), (((float)Player.colors[colorIdx][1]) / 255.0f), (((float)Player.colors[colorIdx][2]) / 255.0f)));
 
         float middleX = (getPointX(1) + getPointX(2)) / 2;
         float middleY = (getPointY(1) + getPointY(2)) / 2;
+        //fill positions
 		int[] xPositions = {(int)getPointX(1), (int)getPointX(2), (int)getPointX(3)};
 		int[] yPositions = {(int)getPointY(1), (int)getPointY(2),(int)getPointY(3)};
+        //border positions
         int[] xPositions2 = {(int)middleX-1, (int)middleX+1, (int)getPointX(3)};
         int[] yPositions2 = {(int)middleY, (int)middleY,(int)getPointY(3)};
 
+        //trails
+        g.setColor(Color.WHITE);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(2));
+        g2.drawLine((int)getPointX(1), (int)getPointY(1) - 2, (int)getPointX(1) - (int)this.xMove * 20, (int)getPointY(1) - (int)this.yMove * 10); //left trail
+        g2.drawLine((int)getPointX(2), (int)getPointY(2) - 2, (int)getPointX(2) - (int)this.xMove * 20, (int)getPointY(2) - (int)this.yMove * 10);  //right trail
+        g2.setStroke(new BasicStroke(1));
+
+        //body
+        g.setColor(new Color((((float)Player.colors[colorIdx][0]) / 255.0f), (((float)Player.colors[colorIdx][1]) / 255.0f), (((float)Player.colors[colorIdx][2]) / 255.0f)));
 		g.fillPolygon(xPositions, yPositions, 3);
+
+        //borders
         g.setColor(Color.GRAY);
         g.drawPolygon(xPositions, yPositions, 3);
         g.setColor(Color.DARK_GRAY);
         g.drawPolygon(xPositions2, yPositions2, 3);
+
 	}
 
     /*Gets points X position INCLUDING variable angle.
