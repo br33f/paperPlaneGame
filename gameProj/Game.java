@@ -8,8 +8,11 @@ import java.awt.image.BufferedImage;
 
 import input.KeyManager;
 import states.GameState;
+import states.InstructionState;
 import states.MenuState;
 import states.State;
+
+import javax.swing.*;
 
 public class Game implements Runnable
 {
@@ -25,7 +28,7 @@ public class Game implements Runnable
 	private BufferStrategy bs;
 	private Graphics g;
 	//states
-	private State gameState, menuState;
+	public State gameState, menuState, instructionState;
 	//input
 	private KeyManager keyManager;
 	//score
@@ -44,9 +47,12 @@ public class Game implements Runnable
 	{		
 		display = new Display(this.title, this.width, this.height);
 		display.getFrame().addKeyListener(keyManager);
+		ImageIcon icon=new ImageIcon("res/ikona.png");
+		display.setIconImage(icon.getImage());
 		
 		gameState = new GameState(this);
 		menuState = new MenuState(this);
+        instructionState = new InstructionState(this);
 		State.setState(menuState);
 		
 	}
@@ -132,7 +138,6 @@ public class Game implements Runnable
 			try {
 				thread.join();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

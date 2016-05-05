@@ -22,7 +22,7 @@ public class Player extends Creature
 	{
 		super(x, y, width, height, world);
 		this.game = game;
-        this.angle = 20.0f;
+        this.angle = 0.0f;
         this.rotX = this.x + this.width/2;
         this.rotY = this.y + this.height/2;
 	}
