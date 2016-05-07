@@ -43,7 +43,7 @@ public class MenuState extends State
         this.drawMenu(g);
 
 		g.setColor(Color.BLACK);
-		String str = "SCORE: " + Integer.toString(Score.lastScore);
+		String str = "WYNIK: " + Integer.toString(Score.lastScore);
 		g.drawString(str, 250, 600);
 	}
 
