@@ -3,7 +3,7 @@ package gameProj;
 import java.awt.Canvas;
 import java.awt.Dimension;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 public class Display extends JFrame 
 {
@@ -30,13 +30,15 @@ public class Display extends JFrame
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+
+		frame.setIconImage(new ImageIcon(getClass().getResource("/images/icon.png")).getImage());
 		
 		canvas = new Canvas();
 		canvas.setPreferredSize(new Dimension(this.width, this.height));
 		canvas.setMaximumSize(new Dimension(this.width, this.height));
 		canvas.setMinimumSize(new Dimension(this.width, this.height));
 		canvas.setFocusable(false);
-		
+
 		frame.add(canvas);
 		frame.pack();
 	}

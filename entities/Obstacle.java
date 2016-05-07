@@ -3,8 +3,7 @@ package entities;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import gameProj.Launcher;
-import worlds.World;
+import gameProj.World;
 
 public class Obstacle extends Entity
 {

@@ -1,4 +1,4 @@
-package worlds;
+package gameProj;
 
 import java.awt.Graphics;
 import java.util.List;
@@ -16,11 +16,8 @@ import tiles.Tile;
 public class World 
 {
 	//attributes
-	private int[][] tiles;
 	private List<Obstacle> obstacles; 
 	private Score score;
-	public static final int TILE_WIDTH = 20; 
-	public static final int TILE_HEIGHT = 20;
     public static boolean Accelerated = false;
 	private int obstacleDelay, obstacleCounter, obstacleIncreaseCounter;
 	
@@ -28,28 +25,10 @@ public class World
 	public World(String path, Score score)
 	{
 		this.score = score;
-		this.tiles = new int[TILE_WIDTH][TILE_HEIGHT];
 		this.obstacles = new LinkedList<Obstacle>();
 
 		this.obstacleCounter = this.obstacleDelay = 60;
 		this.obstacleIncreaseCounter = 0;
-		
-		//initializing with -1
-		for(int x = 0; x < TILE_WIDTH; x++)
-			for(int y = 0; y < TILE_HEIGHT; y++)
-				this.tiles[x][y] = -1;
-		
-		this.loadWorld(path);
-	}
-	public void loadWorld(String path)
-	{
-		/*for(int x = 0; x < TILE_WIDTH; x++)
-			for(int y = 0; y < TILE_HEIGHT; y++)
-			{
-				if(y > 15)
-					this.tiles[x][y] = 0;
-			}
-			*/
 	}
 	public void tick()
 	{
@@ -79,42 +58,12 @@ public class World
 			}
 			last --;
 		}
-		
-		for(int x = 0; x < TILE_WIDTH; x++)
-			for(int y = 0; y < TILE_HEIGHT; y++)
-			{
-				int tileId = this.tiles[x][y];
-				if(tileId != -1)
-					Tile.tiles[tileId].tick();
-			}
 	}
 	public void render(Graphics g)
 	{	
 		int size = this.obstacles.size();
 		for(int i = 0; i < size; i++)
 			this.obstacles.get(i).render(g);
-		
-		for(int x = 0; x < TILE_WIDTH; x++)
-			for(int y = 0; y < TILE_HEIGHT; y++)
-			{
-				int tileId = this.tiles[x][y];
-				if(tileId != -1)
-					Tile.tiles[tileId].render(g, x*Launcher.WINDOW_WIDTH/TILE_WIDTH, y*Launcher.WINDOW_HEIGHT/TILE_WIDTH);
-			}
-	}
-	public boolean isCollision(float x, float y)
-	{
-		x = x / (Launcher.WINDOW_WIDTH/TILE_WIDTH);
-		y = y / (Launcher.WINDOW_HEIGHT/TILE_HEIGHT);
-		
-		boolean returnedValue = false;
-		if(x < TILE_WIDTH && x > 0 && y < TILE_HEIGHT && y > 0)
-		{
-			int tileId = this.tiles[(int)x][(int)y];
-			if(tileId != -1)
-				returnedValue = Tile.tiles[tileId].isSolid();
-		}
-		return returnedValue;
 	}
 	public boolean isHitByObstacle(float x1, float x2, float x3, float y1, float y2, float y3)
 	{

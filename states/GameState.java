@@ -10,7 +10,7 @@ import gameProj.Game;
 import gameProj.Launcher;
 import gameProj.Score;
 import gfx.ImageLoader;
-import worlds.World;
+import gameProj.World;
 
 public class GameState extends State
 {

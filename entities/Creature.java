@@ -1,7 +1,7 @@
 package entities;
 
 import gameProj.Launcher;
-import worlds.World;
+import gameProj.World;
 
 public abstract class Creature extends Entity
 {
@@ -43,8 +43,6 @@ public abstract class Creature extends Entity
 			float checkedX = this.x;
 			if(this.xMove > 0)
 				checkedX += 32;
-			if(this.world.isCollision(checkedX, this.y) || this.world.isCollision(checkedX, this.y+32))
-				this.x = saved;
 		}
 	}
 	private void moveY()
@@ -56,10 +54,6 @@ public abstract class Creature extends Entity
             float checkedY = this.y;
             if (this.yMove > 0)
                 checkedY += 32;
-            if (this.world.isCollision(this.x, checkedY) || this.world.isCollision(this.x + 32, checkedY)) {
-                this.y = saved - (saved % 32) + 31.999f;
-                this.yMove = 0;
-            }
             World.Accelerated = false;
 		}
         else if(this.y <= 0)

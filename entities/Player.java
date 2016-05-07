@@ -1,12 +1,11 @@
 package entities;
 
 import java.awt.*;
-import java.awt.geom.Line2D;
 
 
 import gameProj.Game;
 import gameProj.Launcher;
-import worlds.World;
+import gameProj.World;
 
 public class Player extends Creature 
 {

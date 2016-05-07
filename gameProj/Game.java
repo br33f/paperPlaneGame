@@ -7,10 +7,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
 import input.KeyManager;
-import states.GameState;
-import states.InstructionState;
-import states.MenuState;
-import states.State;
+import states.*;
 
 import javax.swing.*;
 
@@ -28,7 +25,7 @@ public class Game implements Runnable
 	private BufferStrategy bs;
 	private Graphics g;
 	//states
-	public State gameState, menuState, instructionState;
+	public State gameState, menuState, instructionState, gameoverState, scoresState;
 	//input
 	private KeyManager keyManager;
 	//score
@@ -53,6 +50,8 @@ public class Game implements Runnable
 		gameState = new GameState(this);
 		menuState = new MenuState(this);
         instructionState = new InstructionState(this);
+		gameoverState = new GameoverState(this);
+        scoresState = new ScoresState(this);
 		State.setState(menuState);
 		
 	}
@@ -144,14 +143,14 @@ public class Game implements Runnable
 	}
 	public void gameOver()
 	{
-		State.setState(menuState);
+		State.setState(gameoverState);
 		this.gameState = new GameState(this);
 	}
 	private void toogleMenu()
 	{
 		if(State.getState() == this.menuState)
 			State.setState(gameState);
-		else
+		else if(State.getState() == this.gameState)
 			State.setState(menuState);
 	}
 }
