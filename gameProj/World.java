@@ -10,8 +10,6 @@ import entities.Entity;
 import entities.Obstacle;
 import gameProj.Launcher;
 import gameProj.Score;
-import tiles.FloorTile;
-import tiles.Tile;
 
 public class World 
 {

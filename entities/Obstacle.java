@@ -31,8 +31,6 @@ public class Obstacle extends Entity
 	public boolean collision(float x1, float x2, float x3, float y1, float y2, float y3)
 	{
 		boolean returnedValue = false;
-		float center_x = x + width / 2;
-		float center_y = y + height / 2;
 		float collisionPoints[][] =	{
 				{this.x, this.y},
 				{this.x, this.y + this.height/2},

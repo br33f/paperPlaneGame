@@ -5,6 +5,7 @@ import gameProj.Launcher;
 import gameProj.Score;
 import gfx.ImageLoader;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -15,6 +16,8 @@ public class GameoverState extends State {
     //attributes
     public static BufferedImage logo = ImageLoader.loadImage("/images/logo.png");
 
+    public int endScore;
+
     //methods
     public GameoverState(Game game){
         super(game);
@@ -22,6 +25,8 @@ public class GameoverState extends State {
         this.buttonNames = new String[] {"Menu", "Wyjdz"};
         this.buttonHeight = 50;
         this.menuPosition = new int[] {230, 350};
+
+        this.endScore = 0;
     }
 
     @Override
@@ -43,7 +48,7 @@ public class GameoverState extends State {
         g.drawString("GAME OVER", 230, 250);
 
         g.setFont(new Font("Yu Gothic", Font.PLAIN, 20));
-        g.drawString("Wynik: " + Score.lastScore , 230, 280);
+        g.drawString("Wynik: " + this.endScore , 230, 280);
 
         this.drawMenu(g);
     }
@@ -60,4 +65,5 @@ public class GameoverState extends State {
                 break;
         }
     }
+
 }

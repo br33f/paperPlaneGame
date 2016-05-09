@@ -5,6 +5,7 @@ import java.awt.DefaultFocusTraversalPolicy;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.sql.SQLException;
 
 import input.KeyManager;
 import states.*;
@@ -38,7 +39,7 @@ public class Game implements Runnable
 		this.width = width;
 		this.title = title;
 		keyManager = new KeyManager();
-		this.score = new Score();
+		this.score =  Score.getInstance();
 	}
 	private void init()
 	{		
@@ -52,6 +53,7 @@ public class Game implements Runnable
         instructionState = new InstructionState(this);
 		gameoverState = new GameoverState(this);
         scoresState = new ScoresState(this);
+
 		State.setState(menuState);
 		
 	}
@@ -104,7 +106,7 @@ public class Game implements Runnable
 			{
 				this.tick();
 				this.render();
-				d--;
+				d = (d > 2) ? 0 : d-1;
 				ticks++;
 			}
 			if(timer >= 1000000000)
@@ -142,11 +144,21 @@ public class Game implements Runnable
 			}
 		}
 	}
+
 	public void gameOver()
 	{
-		State.setState(gameoverState);
+        if(this.score.isConnected() && this.score.isPolePosition()) {
+            this.score.addBestScore();
+            this.renewBestScoresTable();
+        }
+
+        GameoverState gs = (GameoverState) this.gameoverState;
+        gs.endScore = Score.lastScore;
+        State.setState(gameoverState);
 		this.gameState = new GameState(this);
+        this.keyManager.clearKeys();
 	}
+
 	private void toogleMenu()
 	{
 		if(State.getState() == this.menuState)
@@ -154,4 +166,14 @@ public class Game implements Runnable
 		else if(State.getState() == this.gameState)
 			State.setState(menuState);
 	}
+
+    private void renewBestScoresTable()
+    {
+        ScoresState ss = (ScoresState) this.scoresState;
+        try {
+            ss.setScoresTable(this.score.getScores(5));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -24,9 +24,10 @@ public class GameState extends State
 	public GameState(Game game)
 	{
 		super(game);
-		this.game.score = new Score();
+		this.game.score = Score.getInstance();
 		this.world = new World("", this.game.score);
 		this.player = new Player(game, 304, 320, 32, 64, this.world);
+		this.game.score.resetScore();
 	}
 
 	public void tick() 

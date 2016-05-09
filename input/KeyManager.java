@@ -14,7 +14,7 @@ public class KeyManager implements KeyListener
 	//methods
 	public KeyManager()
 	{
-		keys = new boolean[256];
+		this.clearKeys();
 	}
 	public void tick()
 	{
@@ -56,5 +56,12 @@ public class KeyManager implements KeyListener
 			return true;
 		else
 			return false;
+	}
+
+	public void clearKeys()
+	{
+		keys = new boolean[256];
+		up = down = left = right = esc = enter = false;
+		p_esc = p_up = p_down = p_enter = false;
 	}
 }
