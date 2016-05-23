@@ -1,26 +1,31 @@
-package gameProj;
+package game;
 
 import java.awt.Graphics;
 import java.util.List;
 import java.util.Random;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
-import entities.Entity;
 import entities.Obstacle;
-import gameProj.Launcher;
-import gameProj.Score;
+import entities.primitives.Triangle;
 
-public class World 
+/**
+ * Klasa zawiera atrybuty i metody służące przechowywaniu, aktualizowaniu i rysowaniu obiektów świata gry takich jak przeszkody.
+ */
+public class World
 {
 	//attributes
 	private List<Obstacle> obstacles; 
 	private Score score;
     public static boolean Accelerated = false;
 	private int obstacleDelay, obstacleCounter, obstacleIncreaseCounter;
-	
-	//methods
-	public World(String path, Score score)
+
+    //methods
+
+	/**
+	 * Konstruktor parametryczny klasy World
+	 * @param score obiekt typu Score
+	 */
+	public World(Score score)
 	{
 		this.score = score;
 		this.obstacles = new LinkedList<Obstacle>();
@@ -28,7 +33,12 @@ public class World
 		this.obstacleCounter = this.obstacleDelay = 60;
 		this.obstacleIncreaseCounter = 0;
 	}
-	public void tick()
+
+    /**
+     * Metoda aktualizacji danych.
+     * Przesuwa przeszkody, generuje je w zdanym okresie czasu.
+     */
+    public void tick()
 	{
 		this.obstacleIncreaseCounter++;
 		if(this.obstacleIncreaseCounter >= 150)
@@ -57,19 +67,26 @@ public class World
 			last --;
 		}
 	}
-	public void render(Graphics g)
+
+    /**
+     * Metoda wywołująca rysowanie przeszkód.
+     * Wywoływana zawsze po tick().
+     * @param g obiekt klasy Graphics pozwalający na rysowanie
+     */
+    public void render(Graphics g)
 	{	
 		int size = this.obstacles.size();
 		for(int i = 0; i < size; i++)
 			this.obstacles.get(i).render(g);
 	}
-	public boolean isHitByObstacle(float x1, float x2, float x3, float y1, float y2, float y3)
+
+    public boolean isHitByObstacle(Triangle t)
 	{
 		int size = this.obstacles.size();
 		boolean returnedValue = false;
 		
 		for(int i = 0; i < size; i++)
-			returnedValue |= this.obstacles.get(i).collision(x1, x2, x3, y1, y2, y3);
+			returnedValue |= this.obstacles.get(i).collision(t);
 
 		return returnedValue;
 	}

@@ -5,11 +5,11 @@ import java.awt.image.BufferedImage;
 
 import entities.Obstacle;
 import entities.Player;
-import gameProj.Game;
-import gameProj.Launcher;
-import gameProj.Score;
+import game.Game;
+import game.Launcher;
+import game.Score;
 import gfx.ImageLoader;
-import gameProj.World;
+import game.World;
 
 public class GameState extends State
 {
@@ -25,7 +25,7 @@ public class GameState extends State
 	{
 		super(game);
 		this.game.score = Score.getInstance();
-		this.world = new World("", this.game.score);
+		this.world = new World(this.game.score);
 		this.player = new Player(game, 304, 320, 32, 64, this.world);
 		this.game.score.resetScore();
 	}

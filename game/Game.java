@@ -1,10 +1,7 @@
-package gameProj;
+package game;
 
-import java.awt.Color;
-import java.awt.DefaultFocusTraversalPolicy;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
 import java.sql.SQLException;
 
 import input.KeyManager;
@@ -12,6 +9,11 @@ import states.*;
 
 import javax.swing.*;
 
+
+/**
+ * Główna klasa gry implementująca inteface Runnable
+ * Klasa ta tworzy osobny wątek
+ */
 public class Game implements Runnable
 {
 	//attributes
@@ -33,7 +35,14 @@ public class Game implements Runnable
 	public Score score;
 	
 	//methods
-	public Game(String title, int width, int height)
+
+    /**
+     * Konstruktor parametryczny klasy Game
+     * @param title tytuł gry (wyświetlany w nagłówku okienka)
+     * @param width szerokość okna gry
+     * @param height wysokość okna gry
+     */
+    public Game(String title, int width, int height)
 	{
 		this.height = height;
 		this.width = width;
@@ -41,7 +50,12 @@ public class Game implements Runnable
 		keyManager = new KeyManager();
 		this.score =  Score.getInstance();
 	}
-	private void init()
+
+    /**
+     * Metoda inicjalizująca.
+     * Wykonuje się na początku przed wejściem do głównej pętli gry.
+     */
+    private void init()
 	{		
 		display = new Display(this.title, this.width, this.height);
 		display.getFrame().addKeyListener(keyManager);
@@ -57,7 +71,11 @@ public class Game implements Runnable
 		State.setState(menuState);
 		
 	}
-	private void tick()
+
+    /**
+     * Metoda aktualizacji danych (współrzędnych gracza, przeszkód itp.)
+     */
+    private void tick()
 	{
 		keyManager.tick();
 		
@@ -67,7 +85,12 @@ public class Game implements Runnable
 		if(State.getState() != null)
 			State.getState().tick();
 	}
-	private void render()
+
+    /**
+     * Metoda rysowania obiektów.
+     * Wykonywana zawsze po tick().
+     */
+    private void render()
 	{
 		bs = display.getCanvas().getBufferStrategy();
 		if(bs == null)
@@ -84,7 +107,11 @@ public class Game implements Runnable
 		bs.show();
 		g.dispose();
 	}
-	public void run()
+
+    /**
+     * Metoda inicjuje dane oraz uruchamia główną pętle gry.
+     */
+    public void run()
 	{
 		this.init();
 		//fps controll variables
@@ -119,11 +146,21 @@ public class Game implements Runnable
 		}
 		this.stop();
 	}
-	public KeyManager getKeyManager()
+
+    /**
+     * Getter
+     * @return obiekt klasy KeyManager pozwalający na odczyt wciskanych przez gracza klawiszy.
+     */
+    public KeyManager getKeyManager()
 	{
 		return this.keyManager;
 	}
-	public synchronized void start()
+
+    /**
+     * Metoda utworzenia nowego wątku.
+     * Uniemożliwia powołanie kolejnego wątku, jeśli gra jest już uruchomiona.
+     */
+    public synchronized void start()
 	{
 		if(!this.running)
 		{
@@ -132,7 +169,11 @@ public class Game implements Runnable
 			thread.start();
 		}
 	}
-	public synchronized void stop()
+
+    /**
+     * Metoda zatrzymująca wątek.
+     */
+    public synchronized void stop()
 	{
 		if(this.running)
 		{
@@ -145,9 +186,15 @@ public class Game implements Runnable
 		}
 	}
 
-	public void gameOver()
+    /**
+     * Metoda wywoływana jest po kolizji gracza z przeszkodą.
+     * Spradzany jest stan połaczenia z bazą danych oraz pozycja gracza w rankingu.
+     * Stan ustalany jest na GameoverState
+     */
+    public void gameOver()
 	{
-        if(this.score.isConnected() && this.score.isPolePosition()) {
+		int playersPosition = this.score.getPlayerPosition();
+        if(this.score.isConnected() && playersPosition >= 1 && playersPosition <= 5) {
             this.score.addBestScore();
             this.renewBestScoresTable();
         }
@@ -159,7 +206,10 @@ public class Game implements Runnable
         this.keyManager.clearKeys();
 	}
 
-	private void toogleMenu()
+    /**
+     * Metoda przełącza stan między menu a grą.
+     */
+    private void toogleMenu()
 	{
 		if(State.getState() == this.menuState)
 			State.setState(gameState);
@@ -167,6 +217,9 @@ public class Game implements Runnable
 			State.setState(menuState);
 	}
 
+    /**
+     * Metoda odświeża tablice 5 najlepszych wyników.
+     */
     private void renewBestScoresTable()
     {
         ScoresState ss = (ScoresState) this.scoresState;

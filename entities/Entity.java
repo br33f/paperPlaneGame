@@ -1,36 +1,36 @@
 package entities;
 
 import java.awt.Graphics;
+import entities.primitives.Point;
 
 public abstract class Entity 
 {
 	//attributes
-	protected float x, y;
+	protected Point p;
 	protected int width, height;
 	
 	//methods
 	public Entity(float x, float y, int width, int height)
 	{
-		this.x = x;
-		this.y = y;
+		this.p = new Point(x, y);
 		this.width = width;
 		this.height = height;
 	}
 	public float getX() 
 	{
-		return x;
+		return p.getX();
 	}
 	public void setX(float x) 
 	{
-		this.x = x;
+		p.setX(x);
 	}
 	public float getY() 
 	{
-		return y;
+		return p.getY();
 	}
 	public void setY(float y) 
 	{
-		this.y = y;
+		p.setY(y);
 	}
 	public int getWidth() 
 	{

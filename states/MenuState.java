@@ -1,13 +1,12 @@
 package states;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import gameProj.Game;
-import gameProj.Launcher;
-import gameProj.Score;
+import game.Game;
+import game.Launcher;
+import game.Score;
 import gfx.ImageLoader;
 
 public class MenuState extends State

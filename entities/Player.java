@@ -1,20 +1,22 @@
 package entities;
 
+import entities.primitives.Point;
+import entities.primitives.Triangle;
+import game.Game;
+import game.Launcher;
+import game.World;
+
 import java.awt.*;
 
-
-import gameProj.Game;
-import gameProj.Launcher;
-import gameProj.World;
-
-public class Player extends Creature 
+public class Player extends Creature
 {
     //static attributes
     public static int colors[][] =  {{101,147,207}};
 
 	//attributes
 	private Game game;
-    private Float angle, rotX, rotY;
+    private Float angle;
+    private Triangle t;
 	
 	//methods
 	public Player(Game game, float x, float y, int width, int height, World world) 
@@ -22,15 +24,18 @@ public class Player extends Creature
 		super(x, y, width, height, world);
 		this.game = game;
         this.angle = 0.0f;
-        this.rotX = this.x + this.width/2;
-        this.rotY = this.y + this.height/2;
+
+        Point p1 = new Point(x, y + height);
+        Point p2 = new Point(x + width, y + height);
+        Point p3 = new Point(x + width / 2, y);
+        this.t = new Triangle(new Point[] {p1, p2, p3});
 	}
 	@Override
 	public void tick()
 	{
 		this.getInput();
-        this.calculateRotationPoint();
-		if(this.world.isHitByObstacle(getPointX(1), getPointX(2), getPointX(3), getPointY(1), getPointY(2), getPointY(3)) || this.y + this.height >= Launcher.WINDOW_HEIGHT)
+        Point[] v = {this.t.getVertex(1), this.t.getVertex(2), this.t.getVertex(3)};
+		if(this.world.isHitByObstacle(this.t))
 			this.game.gameOver();
 		else
 			this.move();
@@ -38,19 +43,57 @@ public class Player extends Creature
 
     public void move()
     {
-        if(this.xMove > 0)
-            angle = 20.0f;
-        else if(this.xMove < 0)
-            angle = -20.0f;
-        else
-            angle = 0.0f;
-        super.move();
+        this.makeRotation();
+
+        if(this.xMove * this.yMove != 0)
+        {
+            this.xMove /= Math.sqrt(2);
+            this.yMove /= Math.sqrt(2);
+        }
+        this.moveX();
+        this.moveY();
     }
 
-    private void calculateRotationPoint()
-    {
-        this.rotX = this.x + this.width/2;
-        this.rotY = this.y + this.height/2;
+    private void makeRotation(){
+        if(this.xMove > 0){
+            this.t.rotate(20.0f - this.angle);
+            this.angle = 20.0f;
+        }
+        else if(this.xMove < 0){
+            this.t.rotate(-20.0f - this.angle);
+            this.angle = -20.0f;
+        }
+        else if(this.angle != 0.0f){
+            this.t.rotate(-this.angle);
+            this.angle = 0.0f;
+        }
+    }
+
+    private void moveX(){
+        if((this.xMove > 0 && this.t.getVertex(3).getX() < Launcher.WINDOW_WIDTH) || (this.xMove < 0 && this.t.getVertex(3).getX() > 0))
+        {
+            this.t.translate(this.xMove, 0);
+        }
+        else
+            this.xMove = 0;
+    }
+
+    private void moveY(){
+        int bottomCheckPoint = (this.xMove >= 0 ) ? 2 : 1;
+        if((this.yMove > 0 && this.t.getVertex(bottomCheckPoint).getY() < Launcher.WINDOW_HEIGHT) || (this.yMove < 0 && this.t.getVertex(3).getY() > 0))
+        {
+            this.t.translate(0, this.yMove);
+            World.Accelerated = false;
+        }
+        else if(this.yMove > 0 && this.t.getVertex(bottomCheckPoint).getY() >= Launcher.WINDOW_HEIGHT){
+            this.game.gameOver();
+        }
+        else if(this.t.getVertex(3).getY() <= 0){
+            World.Accelerated = true;
+            this.yMove = 0;
+        }
+        else
+            this.yMove = 0;
     }
 
 	private void getInput()
@@ -68,25 +111,27 @@ public class Player extends Creature
 		
 	}
 	@Override
-	public void render(Graphics g) 
+	public void render(Graphics g)
 	{
 		int colorIdx = 0;
 
-        float middleX = (getPointX(1) + getPointX(2)) / 2;
-        float middleY = (getPointY(1) + getPointY(2)) / 2;
+        Point[] v = {this.t.getVertex(1), this.t.getVertex(2), this.t.getVertex(3)};
+        Point middlePoint = v[0].getMiddle(v[1]);
+
         //fill positions
-		int[] xPositions = {(int)getPointX(1), (int)getPointX(2), (int)getPointX(3)};
-		int[] yPositions = {(int)getPointY(1), (int)getPointY(2),(int)getPointY(3)};
+		int[] xPositions = {(int)v[0].getX(), (int)v[1].getX(), (int)v[2].getX()};
+		int[] yPositions = {(int)v[0].getY(), (int)v[1].getY(), (int)v[2].getY()};
+
         //border positions
-        int[] xPositions2 = {(int)middleX-1, (int)middleX+1, (int)getPointX(3)};
-        int[] yPositions2 = {(int)middleY, (int)middleY,(int)getPointY(3)};
+        int[] xPositions2 = {(int)middlePoint.getX()-1, (int)middlePoint.getX()+1, (int)v[2].getX()};
+        int[] yPositions2 = {(int)middlePoint.getY(), (int)middlePoint.getY(), (int)v[2].getY()};
 
         //trails
         g.setColor(Color.WHITE);
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(new BasicStroke(2));
-        g2.drawLine((int)getPointX(1), (int)getPointY(1) - 2, (int)getPointX(1) - (int)this.xMove * 20, (int)getPointY(1) - (int)this.yMove * 10); //left trail
-        g2.drawLine((int)getPointX(2), (int)getPointY(2) - 2, (int)getPointX(2) - (int)this.xMove * 20, (int)getPointY(2) - (int)this.yMove * 10);  //right trail
+        g2.drawLine((int)v[0].getX(), (int)v[0].getY() - 2, (int)v[0].getX() - (int)this.xMove * 20, (int)v[0].getY() - (int)this.yMove * 10); //left trail
+        g2.drawLine((int)v[1].getX(), (int)v[1].getY() - 2, (int)v[1].getX() - (int)this.xMove * 20, (int)v[1].getY() - (int)this.yMove * 10);  //right trail
         g2.setStroke(new BasicStroke(1));
 
         //body
@@ -98,69 +143,6 @@ public class Player extends Creature
         g.drawPolygon(xPositions, yPositions, 3);
         g.setColor(Color.DARK_GRAY);
         g.drawPolygon(xPositions2, yPositions2, 3);
-
 	}
-
-    /*Gets points X position INCLUDING variable angle.
-    *    3
-    *   /\
-    *  /  \
-    * /----\
-    * 1    2
-    * */
-    private float getPointX(int vertex)
-    {
-        float pX = getVertexXPos(vertex);
-        float pY = getVertexYPos(vertex);
-        float angleRad = this.angle * 3.14f / 180.0f;
-
-        return Math.round( (pX - this.rotX) * Math.cos(angleRad) - (pY - this.rotY) * Math.sin(angleRad)) + this.rotX;
-    }
-
-    /*Gets points Y position INCLUDING variable angle. */
-    private float getPointY(int vertex)
-    {
-        float pX = getVertexXPos(vertex);
-        float pY = getVertexYPos(vertex);
-        float angleRad = this.angle * 3.14f / 180.0f;
-
-        return Math.round( (pX - this.rotX) * Math.sin(angleRad) + (pY - this.rotY) * Math.cos(angleRad)) + this.rotY;
-    }
-
-    private float getVertexXPos(int vertex)
-    {
-        float pX = 0.0f;
-        switch(vertex)
-        {
-            case 1:
-                pX = this.x;
-                break;
-            case 2:
-                pX = this.x + this.width;
-                break;
-            case 3:
-                pX = this.x + this.width / 2;
-                break;
-        }
-        return pX;
-    }
-
-    private float getVertexYPos(int vertex)
-    {
-        float pY = 0.0f;
-        switch(vertex)
-        {
-            case 1:
-                pY = this.y + this.height;
-                break;
-            case 2:
-                pY = this.y + this.height;
-                break;
-            case 3:
-                pY = this.y ;
-                break;
-        }
-        return pY;
-    }
 
 }

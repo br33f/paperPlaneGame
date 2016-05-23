@@ -1,7 +1,7 @@
 package states;
 
-import gameProj.Game;
-import gameProj.Launcher;
+import game.Game;
+import game.Launcher;
 
 import java.awt.*;
 import java.sql.SQLException;

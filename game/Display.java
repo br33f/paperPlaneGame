@@ -1,19 +1,29 @@
-package gameProj;
+package game;
 
 import java.awt.Canvas;
 import java.awt.Dimension;
 
 import javax.swing.*;
 
-public class Display extends JFrame 
+/**
+ * Klasa odpowiadająca za wyświetlanie danych. Rozszerza JFrame.
+ */
+public class Display extends JFrame
 {
 	//attributes
 	private JFrame frame;
 	private Canvas canvas;
 	private String title;
 	private int width, height;
-	
-	//methods
+
+    //methods
+
+    /**
+     * Konstruktor parametryczny klasy Display
+     * @param title tytuł wyświetlający się w nagłówku okna
+     * @param width szerokość okna
+     * @param height wysokość okna
+     */
 	public Display(String title, int width, int height)
 	{
 		this.title = title;
@@ -22,7 +32,11 @@ public class Display extends JFrame
 		
 		this.createDisplay();
 	}
-	private void createDisplay()
+
+    /**
+     * Metoda ta tworzy nowe okno i ustawia jego parametry takie jak rozmiar, ikonę, tytuł itp.
+     */
+    private void createDisplay()
 	{
 		frame = new JFrame(this.title);
 		frame.setSize(this.width, this.height);
@@ -42,11 +56,21 @@ public class Display extends JFrame
 		frame.add(canvas);
 		frame.pack();
 	}
-	public Canvas getCanvas()
+
+    /**
+     * Getter
+     * @return obiekt klasy Canvas
+     */
+    public Canvas getCanvas()
 	{
 		return this.canvas;
 	}
-	public JFrame getFrame()
+
+    /**
+     * Getter
+     * @return obiekt klasy JFrame
+     */
+    public JFrame getFrame()
 	{
 		return this.frame;
 	}

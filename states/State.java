@@ -2,10 +2,8 @@ package states;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.nio.BufferOverflowException;
 
-import gameProj.Game;
-import gameProj.Score;
+import game.Game;
 import gfx.ImageLoader;
 
 public abstract class State 

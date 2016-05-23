@@ -1,11 +1,9 @@
 package states;
 
-import gameProj.Game;
-import gameProj.Launcher;
-import gameProj.Score;
+import game.Game;
+import game.Launcher;
 import gfx.ImageLoader;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
