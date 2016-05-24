@@ -7,6 +7,10 @@ import entities.primitives.Point;
 import entities.primitives.Triangle;
 import game.World;
 
+/**
+ * Klasa Obstacle - przeszkoda.
+ * Dziedziczy z Entity.
+ */
 public class Obstacle extends Entity
 {
 	//attributes
@@ -15,22 +19,40 @@ public class Obstacle extends Entity
 	private int colorVariant;
 	
 	//methods
-	public Obstacle(float x, float y, int width, int height, float speedX, float speedY, int colorVariant) 
+
+	/**
+     * @param x punkt początkowy (oś pozioma).
+     * @param y punkt początkowy (oś pionowa).
+     * @param width szerokość encji.
+     * @param height wysokość encji.
+	 * @param speedX prędkość poruszania się przeszkody w osi X.
+	 * @param speedY prędkość poruszania się przeszkody w osi Y.
+	 * @param colorVariant wariant kolorystyczny przeszkody.
+	 */
+	public Obstacle(float x, float y, int width, int height, float speedX, float speedY, int colorVariant)
 	{
 		super(x, y, width, height);
 		this.speedX = speedX;
 		this.speedY = speedY;
 		this.colorVariant = colorVariant;
 	}
-	
-	public void movement()
+
+    /**
+     * Metoda przemieszcza przeszkodę. Wywoływana w tick().
+     */
+    public void movement()
 	{
         float factor = (World.Accelerated) ? 1.5f : 1.0f;
 		this.setX(this.getX() + this.speedX * factor);
 		this.setY(this.getY() + this.speedY * factor);
 	}
-	
-	public boolean collision(Triangle t)
+
+    /**
+     * Metoda sprawdza czy zachodzi kolizja między graczem a przeszkodą.
+     * @param t trójkąt (punkty odpowiedzialne za położenie gracza)
+     * @return wartość true/false (true - kolizja, false - brak kolizji)
+     */
+    public boolean collision(Triangle t)
 	{
 		boolean returnedValue = false;
 		float collisionPoints[][] =	{
@@ -70,7 +92,12 @@ public class Obstacle extends Entity
 		return returnedValue;
 	}
 
-	private float sign(Point[] p)
+    /**
+     * Metoda pomocnicza do sprawdzania kolizji punktu z trójkątem.
+     * @param p tablica 3 punktów
+     * @return wynik obliczeń
+     */
+    private float sign(Point[] p)
 	{
 		return (p[0].getX() - p[2].getX()) * (p[1].getY() - p[2].getY()) - (p[1].getX() - p[2].getX()) * (p[0].getY() - p[2].getY());
 	}

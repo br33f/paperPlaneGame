@@ -80,7 +80,12 @@ public class World
 			this.obstacles.get(i).render(g);
 	}
 
-    public boolean isHitByObstacle(Triangle t)
+	/**
+	 * Metoda sprawdza czy gracz został uderzony przez którąkolwiek z przeszkód spadających.
+	 * @param t trójkąt odpowiadajacy położeniu gracza
+	 * @return true/false (true - kolizja)
+	 */
+	public boolean isHitByObstacle(Triangle t)
 	{
 		int size = this.obstacles.size();
 		boolean returnedValue = false;
@@ -90,6 +95,12 @@ public class World
 
 		return returnedValue;
 	}
+
+	/**
+	 * Metoda generująca przeszkody.
+	 * Wywoływana z różną częstotliwością z funkcji tick().
+	 * Parametry spadających obiektów takie jak prędkość, kolor itd. dobierane są w głównej mierze losowo.
+	 */
 	private void createObstacle()
 	{
 		int randX, randWidth, randHeight, sign, special, color;

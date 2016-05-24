@@ -5,6 +5,10 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+/**
+ * Klasa ImageLoader.
+ * Zawiera jedynie statyczną metodę, która ładuje obrazek z określonego źródła i zwraca BufferedImage.
+ */
 public class ImageLoader {
 	public static BufferedImage loadImage(String path)
 	{

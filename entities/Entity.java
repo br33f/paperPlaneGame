@@ -3,19 +3,33 @@ package entities;
 import java.awt.Graphics;
 import entities.primitives.Point;
 
-public abstract class Entity 
+/**
+ * Klasa Entity - obiekt
+ * Jest to klasa abstrakcyjna, każda dziedzicząca klasa chrakeryzować się będzie
+ * punktem kontrolnym p oraz szerokościa i wysokością (używane np. w przypadku przeszkód)
+ */
+public abstract class Entity
 {
 	//attributes
 	protected Point p;
 	protected int width, height;
-	
+
 	//methods
+
+	/**
+	 * Konstruktor parametryczny klasy Entity
+	 * @param x punkt początkowy (oś pozioma)
+	 * @param y punkt początkowy (oś pionowa)
+	 * @param width szerokość encji
+	 * @param height wysokość encji
+	 */
 	public Entity(float x, float y, int width, int height)
 	{
 		this.p = new Point(x, y);
 		this.width = width;
 		this.height = height;
 	}
+
 	public float getX() 
 	{
 		return p.getX();

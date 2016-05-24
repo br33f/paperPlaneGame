@@ -4,19 +4,34 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+/**
+ * Klasa KeyManager - zarządca klawiszy.
+ * Implementuje interfejs KeyListener.
+ * Reaguje na naciśnięty klawisz ustawiając odpowiednio zdefiniowane flagi.
+ * Klasa pozwala na reakcje na klawisz naciśnięty, puszczony, a także na zbocze opadające (znaczy reaguje tylko raz na jedno naciśnięcie)
+ */
 public class KeyManager implements KeyListener
 {
 	//attributes
 	private boolean[] keys;
 	public boolean up, down, left, right, esc, enter;
 	public boolean p_esc, p_up, p_down, p_enter;
-	
-	//methods
+
+    //methods
+
+    /**
+     * Konstuktor klasy KeyManager.
+     * Nie przyjmuje parametrów, zeruje jedynie stany klawiszy.
+     */
 	public KeyManager()
 	{
 		this.clearKeys();
 	}
-	public void tick()
+
+    /**
+     * Metoda ustawiająca flagi naciśniętych klawiszy.
+     */
+    public void tick()
 	{
 		//przyciski reagujace na zbocze dodatnie
 		p_esc = this.getPKey(esc, keys[KeyEvent.VK_ESCAPE]);
@@ -47,9 +62,12 @@ public class KeyManager implements KeyListener
 		
 	}
 
-	//pobiera stan przycisku reagujący na zbocze
-	// k1 - przycisk reagujący zwyczajnie
-	// k2 - keys[KeyEvent.KLUCZ_PRZYCISKU]
+    /**
+     * Metoda pobiera stan przycisku reagujący na zbocze.
+     * @param k1 przycisk reagujący zwyczajnie
+     * @param k2 keys[KeyEvent.KLUCZ_PRZYCISKU]
+     * @return stan klawisza
+     */
 	private boolean getPKey(boolean k1, boolean k2)
 	{
 		if(!k1 && k2)
@@ -58,7 +76,10 @@ public class KeyManager implements KeyListener
 			return false;
 	}
 
-	public void clearKeys()
+    /**
+     * Metoda zeruje stany klawiszy. Wymagane przy ponownym uruchomieniu rozgrywki.
+     */
+    public void clearKeys()
 	{
 		keys = new boolean[256];
 		up = down = left = right = esc = enter = false;

@@ -8,6 +8,11 @@ import game.World;
 
 import java.awt.*;
 
+/**
+ * Klasa Player - gracz.
+ * Dziedziczy po Creature - stworzenie.
+ * Klasa odpowiada za ruch gracza po ekranie w osiach X, Y a także jego rotację.
+ */
 public class Player extends Creature
 {
     //static attributes
@@ -19,7 +24,17 @@ public class Player extends Creature
     private Triangle t;
 	
 	//methods
-	public Player(Game game, float x, float y, int width, int height, World world) 
+
+    /**
+     * Konstruktor parametryczny klasy Player
+     * @param game obiekt gry (Game)
+     * @param x punkt początkowy gracza (oś pozioma)
+     * @param y punkt początkowy gracza (oś pionowa)
+     * @param width szerokość podstawy trójkąta
+     * @param height wysokość podstawy trójkąta
+     * @param world obiekt świata (World)
+     */
+    public Player(Game game, float x, float y, int width, int height, World world)
 	{
 		super(x, y, width, height, world);
 		this.game = game;
@@ -30,6 +45,7 @@ public class Player extends Creature
         Point p3 = new Point(x + width / 2, y);
         this.t = new Triangle(new Point[] {p1, p2, p3});
 	}
+
 	@Override
 	public void tick()
 	{
@@ -41,6 +57,45 @@ public class Player extends Creature
 			this.move();
 	}
 
+    @Override
+    public void render(Graphics g)
+    {
+        int colorIdx = 0;
+
+        Point[] v = {this.t.getVertex(1), this.t.getVertex(2), this.t.getVertex(3)};
+        Point middlePoint = v[0].getMiddle(v[1]);
+
+        //fill positions
+        int[] xPositions = {(int)v[0].getX(), (int)v[1].getX(), (int)v[2].getX()};
+        int[] yPositions = {(int)v[0].getY(), (int)v[1].getY(), (int)v[2].getY()};
+
+        //border positions
+        int[] xPositions2 = {(int)middlePoint.getX()-1, (int)middlePoint.getX()+1, (int)v[2].getX()};
+        int[] yPositions2 = {(int)middlePoint.getY(), (int)middlePoint.getY(), (int)v[2].getY()};
+
+        //trails
+        g.setColor(Color.WHITE);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(2));
+        g2.drawLine((int)v[0].getX(), (int)v[0].getY() - 2, (int)v[0].getX() - (int)this.xMove * 20, (int)v[0].getY() - (int)this.yMove * 10); //left trail
+        g2.drawLine((int)v[1].getX(), (int)v[1].getY() - 2, (int)v[1].getX() - (int)this.xMove * 20, (int)v[1].getY() - (int)this.yMove * 10);  //right trail
+        g2.setStroke(new BasicStroke(1));
+
+        //body
+        g.setColor(new Color((((float)Player.colors[colorIdx][0]) / 255.0f), (((float)Player.colors[colorIdx][1]) / 255.0f), (((float)Player.colors[colorIdx][2]) / 255.0f)));
+        g.fillPolygon(xPositions, yPositions, 3);
+
+        //borders
+        g.setColor(Color.GRAY);
+        g.drawPolygon(xPositions, yPositions, 3);
+        g.setColor(Color.DARK_GRAY);
+        g.drawPolygon(xPositions2, yPositions2, 3);
+    }
+
+    /**
+     * Metoda odpowiadająca za ruch gracza po ekranie.
+     * Metoda wywołuje rotację, przelicza prędkość w przypadku ruchu gracza w 2 osiach jednocześnie.
+     */
     public void move()
     {
         this.makeRotation();
@@ -54,6 +109,11 @@ public class Player extends Creature
         this.moveY();
     }
 
+    /**
+     * Metoda kontroluje rotację gracza.
+     * Gracz porusza się w prawo - 20 stopni
+     * Gracz porusza się w lewo - -20 stopni
+     */
     private void makeRotation(){
         if(this.xMove > 0){
             this.t.rotate(20.0f - this.angle);
@@ -69,6 +129,10 @@ public class Player extends Creature
         }
     }
 
+    /**
+     * Metoda przesuwa gracza w osi X - poziomej.
+     * Zabezpiecza ruch w przypadku wyjścia poza granice ekranu.
+     */
     private void moveX(){
         if((this.xMove > 0 && this.t.getVertex(3).getX() < Launcher.WINDOW_WIDTH) || (this.xMove < 0 && this.t.getVertex(3).getX() > 0))
         {
@@ -78,6 +142,12 @@ public class Player extends Creature
             this.xMove = 0;
     }
 
+    /**
+     * Metoda przesuwa gracza w osi Y - pionowej.
+     * Zabezpiecza ruch w przypadku wyjścia poza granice ekranu:
+     * - gdy gracz ucieka w góre przyspiesza grę.
+     * - gdy gracz dotyka dolnej krawędzi następuje przerwanie gry i GameOver.
+     */
     private void moveY(){
         int bottomCheckPoint = (this.xMove >= 0 ) ? 2 : 1;
         if((this.yMove > 0 && this.t.getVertex(bottomCheckPoint).getY() < Launcher.WINDOW_HEIGHT) || (this.yMove < 0 && this.t.getVertex(3).getY() > 0))
@@ -96,7 +166,12 @@ public class Player extends Creature
             this.yMove = 0;
     }
 
-	private void getInput()
+    /**
+     * Metoda odpowiada za sterowanie.
+     * Odczytuje stany klawiszy z keyManager'a i ustala odpowiednie przesunięcia.
+     * Powoduje spadanie gracza w przypadku nie naciśniętego przycisku w góre.
+     */
+    private void getInput()
 	{
 		this.xMove = 0;
         this.yMove = this.speed/2;
@@ -109,40 +184,6 @@ public class Player extends Creature
 		if(game.getKeyManager().right)
 			this.xMove += this.speed;
 		
-	}
-	@Override
-	public void render(Graphics g)
-	{
-		int colorIdx = 0;
-
-        Point[] v = {this.t.getVertex(1), this.t.getVertex(2), this.t.getVertex(3)};
-        Point middlePoint = v[0].getMiddle(v[1]);
-
-        //fill positions
-		int[] xPositions = {(int)v[0].getX(), (int)v[1].getX(), (int)v[2].getX()};
-		int[] yPositions = {(int)v[0].getY(), (int)v[1].getY(), (int)v[2].getY()};
-
-        //border positions
-        int[] xPositions2 = {(int)middlePoint.getX()-1, (int)middlePoint.getX()+1, (int)v[2].getX()};
-        int[] yPositions2 = {(int)middlePoint.getY(), (int)middlePoint.getY(), (int)v[2].getY()};
-
-        //trails
-        g.setColor(Color.WHITE);
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setStroke(new BasicStroke(2));
-        g2.drawLine((int)v[0].getX(), (int)v[0].getY() - 2, (int)v[0].getX() - (int)this.xMove * 20, (int)v[0].getY() - (int)this.yMove * 10); //left trail
-        g2.drawLine((int)v[1].getX(), (int)v[1].getY() - 2, (int)v[1].getX() - (int)this.xMove * 20, (int)v[1].getY() - (int)this.yMove * 10);  //right trail
-        g2.setStroke(new BasicStroke(1));
-
-        //body
-        g.setColor(new Color((((float)Player.colors[colorIdx][0]) / 255.0f), (((float)Player.colors[colorIdx][1]) / 255.0f), (((float)Player.colors[colorIdx][2]) / 255.0f)));
-		g.fillPolygon(xPositions, yPositions, 3);
-
-        //borders
-        g.setColor(Color.GRAY);
-        g.drawPolygon(xPositions, yPositions, 3);
-        g.setColor(Color.DARK_GRAY);
-        g.drawPolygon(xPositions2, yPositions2, 3);
 	}
 
 }
