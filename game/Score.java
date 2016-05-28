@@ -1,30 +1,44 @@
 package game;
 
-import adapters.MysqlAdapter;
-
 import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class Score 
+/**
+ * Klasa Score - Wynik.
+ * Klasa jest odpowiedzialna za odczyt/zapis najlepszych wyników, zliczanie punktów itd.
+ */
+public class Score
 {
 	//attributes
 	public static int lastScore;
 	private int points;
 	private int counter;
 	//db config
-	protected MysqlAdapter adapter;
+	protected Connector connector;
     //class instance
     private static Score instance = null;
 
 	//methods
-	private Score()
+
+    /**
+     * Konstruktor klasy Score.
+     * KONSTRUKTOR PRYWATNY.
+     * Tworzy nowy wątek dla Connectora.
+     */
+    private Score()
 	{
         this.resetScore();
 
-        this.adapter = new MysqlAdapter("mysqlconfig.properties", false);
+        this.connector = new Connector();
+        Thread t = new Thread(this.connector);
+        t.start();
 	}
 
+    /**
+     * Zapewnienie właściwości Singleton dla klasy Score.
+     * @return instancje klasy Score.
+     */
     public static Score getInstance() {
         if(Score.instance == null) {
             Score.instance = new Score();
@@ -32,28 +46,45 @@ public class Score
         return Score.instance;
     }
 
-	public int getPoints() 
+    /**
+     * Getter.
+     * @return liczba punktów.
+     */
+    public int getPoints()
 	{
 		return this.points;
 	}
 
-	public void setPoints(int points) 
+    /**
+     * Setter.
+     * @param points liczba punktów na jaką ma być ustawione.
+     */
+    public void setPoints(int points)
 	{
 		this.points = points;
 	}
-	
-	public void tick()
+
+    /**
+     * Aktualizacja danych.
+     */
+    public void tick()
 	{
 		this.counter++;
 	}
 
-	public boolean isConnected() {
-		return (this.adapter.getDbConnection() != null) ? true : false;
+    /**
+     * Metoda sprawdza stan połączenia.
+     * @return true/false (true - jest połączenie).
+     */
+    public boolean isConnected() {
+		return (this.connector.getDbAdapter() != null && this.connector.getDbAdapter().getDbConnection() != null) ? true : false;
 	}
 
-    /*
-    * Function checks whether players score is in 5 top positions
-    * */
+
+    /**
+     * Metoda sprawdza pozycje gracza w rankingu.
+     * @return pozycja gracza (jeśli większa od 5 to zwróci 0)
+     */
     public int getPlayerPosition()
     {
         int returnedValue = 0;
@@ -65,7 +96,9 @@ public class Score
             e.printStackTrace();
         }
 
-        int size = scores.size();
+        int size = 0;
+        if(scores != null)
+            size = scores.size();
         returnedValue = 1;
 
         for(int i = 0; i < size; i++)
@@ -74,9 +107,17 @@ public class Score
         return returnedValue;
     }
 
+    /**
+     * Metoda pobiera kolekcje wyników
+     * @param limit limiter
+     * @return 2-wymiarowa tablica stringów
+     * @throws SQLException
+     */
     public ArrayList<ArrayList<String>> getScores(int limit) throws SQLException {
+        if(!this.isConnected()) return null;
+
         ArrayList<ArrayList<String>> returnedArray = new ArrayList<ArrayList<String>>();
-        ResultSet result = this.adapter.getResultSet("SELECT `score`, `name` FROM `PaperJet_Scores` ORDER BY `score` DESC LIMIT " + limit);
+        ResultSet result = this.connector.getDbAdapter().getResultSet("SELECT `score`, `name` FROM `PaperJet_Scores` ORDER BY `score` DESC LIMIT " + limit);
 
         if(result != null)
             while(result.next())
@@ -94,6 +135,9 @@ public class Score
         return returnedArray;
     }
 
+    /**
+     * Metoda resetuje wynik.
+     */
     public void resetScore()
     {
         this.points = 0;
@@ -101,30 +145,24 @@ public class Score
         Score.lastScore = 0;
     }
 
+    /**
+     * Metoda realizuje dodanie najlepszego wyniku.
+     * Pobiera informacje do gracza i dodaje do bazy danych.
+     */
     public void addBestScore()
     {
         String response = null;
-        String msg = "Gratulacje! Zająłeś" + this.getPlayerPosition() + " miejsce. Podaj swoje imie/nick, aby zapisać wynik:";
-        String notCorrectMsg = "Nie poprawna nazwa użytkownika (minimum 3 znaki).\n";
-        boolean invalid = false;
+        String msg = "Gratulacje! Zająłeś " + this.getPlayerPosition() + " miejsce. Podaj swoje imie/nick, aby zapisać wynik (minimum 3 znaki):";
 
-        do {
-            String str = (invalid) ? notCorrectMsg + msg : msg;
-            response = (String) JOptionPane.showInputDialog(str);
+        response = (String) JOptionPane.showInputDialog(null, msg, "Zapis wyniku", JOptionPane.OK_CANCEL_OPTION);
 
-            if (response != null && response.trim().length() > 2) {
-                try {
-                    Statement s = this.adapter.getDbConnection().createStatement();
-                    s.execute("INSERT INTO `PaperJet_Scores` (`score`, `name`) VALUES('" + Score.lastScore + "', '" + response + "');");
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                invalid = false;
+        if (response != null && response.trim().length() > 2) {
+            try {
+                Statement s = this.connector.getDbAdapter().getDbConnection().createStatement();
+                s.execute("INSERT INTO `PaperJet_Scores` (`score`, `name`) VALUES('" + Score.lastScore + "', '" + response + "');");
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            else
-                invalid = true;
-        }while(invalid);
+        }
     }
-
-
 }

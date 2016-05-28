@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.sql.SQLException;
 
+import gfx.Display;
 import input.KeyManager;
 import states.*;
 
@@ -220,7 +221,7 @@ public class Game implements Runnable
     /**
      * Metoda odświeża tablice 5 najlepszych wyników.
      */
-    private void renewBestScoresTable()
+    public void renewBestScoresTable()
     {
         ScoresState ss = (ScoresState) this.scoresState;
         try {

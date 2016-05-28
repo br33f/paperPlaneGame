@@ -8,7 +8,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * Created by br33 on 07.05.2016.
+ * Klasa GameoverState ( ekran gameOver ).
+ * Rozszerza State.
  */
 public class GameoverState extends State {
     //attributes
@@ -17,6 +18,11 @@ public class GameoverState extends State {
     public int endScore;
 
     //methods
+
+    /**
+     * Konstruktor parametryczny klasy GameoverState.
+     * @param game obiekt Game
+     */
     public GameoverState(Game game){
         super(game);
         this.buttonCursor = 0;
@@ -49,19 +55,6 @@ public class GameoverState extends State {
         g.drawString("Wynik: " + this.endScore , 230, 280);
 
         this.drawMenu(g);
-    }
-
-    protected void menuSubmitAction()
-    {
-        switch(this.buttonCursor)
-        {
-            case 0: //cofnij
-                State.setState(game.menuState);
-                break;
-            case 1: //wyjdz
-                System.exit(0);
-                break;
-        }
     }
 
 }

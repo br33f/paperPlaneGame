@@ -11,6 +11,10 @@ import game.Score;
 import gfx.ImageLoader;
 import game.World;
 
+/**
+ * Klasa GameState ( gameplay ).
+ * Rozszerza State.
+ */
 public class GameState extends State
 {
 	//attributes
@@ -21,6 +25,11 @@ public class GameState extends State
 	private World world;
 
 	//methods
+
+	/**
+	 * Konstruktor parametryczny klasy GameState.
+	 * @param game obiekt Game
+	 */
 	public GameState(Game game)
 	{
 		super(game);
@@ -30,14 +39,21 @@ public class GameState extends State
 		this.game.score.resetScore();
 	}
 
-	public void tick() 
+	/**
+	 * Aktualiacja świata(world), gracza(player) i wyniku(score).
+	 */
+	public void tick()
 	{
 		this.world.tick();
 		this.player.tick();
 		this.game.score.tick();
 	}
 
-	public void render(Graphics g) 
+	/**
+	 * Metoda rysuje świat, gracza, wynik.
+	 * @param g instancja Graphics
+	 */
+	public void render(Graphics g)
 	{
 		g.setColor(new Color(GameState.colors[0][0] / 255.0f, GameState.colors[0][1] / 255.0f, GameState.colors[0][2] / 255.0f));
 		g.fillRect(0, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);

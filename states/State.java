@@ -6,7 +6,11 @@ import java.awt.image.BufferedImage;
 import game.Game;
 import gfx.ImageLoader;
 
-public abstract class State 
+/**
+ * Klasa abstrakcyjna State - Stan.
+ * Klasa zawiera podstawowe funkcjonalności , które dziecziczy kazdy stan takie jak: instacja gry, menu, metody tick i render.
+ */
+public abstract class State
 {
 	//attributes
 	private static State currentState = null;
@@ -20,24 +24,51 @@ public abstract class State
 	protected int buttonCursor;
 	protected int buttonHeight = 50;
     protected int[] menuPosition;
-	
-	//methods
+
+    //methods
+
+    /**
+     * Konstruktor parametryczny klasy State - stan.
+     * @param game instancja klasy Game - gra.
+     */
 	public State(Game game)
 	{
 		this.game = game;
         this.menuPosition = new int[] {0, 0};
 	}
-	public static void setState(State state)
+
+    /**
+     * Statyczna metoda przestawiająca aktualny stan.
+     * @param state stan który ma być ustawiony jako aktualny.
+     */
+    public static void setState(State state)
 	{
 		State.currentState = state;
 	}
-	public static State getState()
+
+    /**
+     * Statyczna metoda zwracająca aktualny stan.
+     * @return obiekt State - stan
+     */
+    public static State getState()
 	{
 		return State.currentState;
 	}
-	public abstract void tick();
-	public abstract void render(Graphics g);
 
+    /**
+     * Abstrakcyjna metoda tick() służąca do aktualizacji gry.
+     */
+    public abstract void tick();
+
+    /**
+     * Abstrakcyjna metoda render() służąca do rysowania obiektów poszczególnych stanów.
+     * @param g instancja Graphics
+     */
+    public abstract void render(Graphics g);
+
+    /**
+     * Pobiera dane z klawiatury za pomoca KeyManager'a oraz przesuwa kursor w menu.
+     */
     protected void getMenuInput()
     {
         if(game.getKeyManager().p_up)
@@ -49,6 +80,9 @@ public abstract class State
         this.buttonCursor = (this.buttonCursor < 0) ? this.buttonNames.length - 1 : this.buttonCursor;
     }
 
+    /**
+     * Metoda implementuje domyślne akcje na naciśnięte klawisze menu.
+     */
     protected void menuSubmitAction()
     {
         switch(this.buttonCursor)
@@ -62,6 +96,10 @@ public abstract class State
         }
     }
 
+    /**
+     * Metoda rysuje menu z uwzględnieniem kursora.
+     * @param g instacja Graphics
+     */
     protected void drawMenu(Graphics g)
     {
         g.setFont(new Font("Segoe Print", Font.PLAIN, 20));

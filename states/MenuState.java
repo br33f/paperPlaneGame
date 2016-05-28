@@ -9,13 +9,22 @@ import game.Launcher;
 import game.Score;
 import gfx.ImageLoader;
 
+/**
+ * Klasa MenuState.
+ * Rozszerza State.
+ */
 public class MenuState extends State
 {
 	//attributes
 	public static BufferedImage background = ImageLoader.loadImage("/images/menubg.jpg");
 
 	//methods
-	public MenuState(Game game)
+
+    /**
+     * Konstruktor parametryczny klasy MenuState.
+     * @param game obiekt Game.
+     */
+    public MenuState(Game game)
 	{
 		super(game);
         this.buttonCursor = 0;
@@ -46,6 +55,9 @@ public class MenuState extends State
 		g.drawString(str, 250, 600);
 	}
 
+    /**
+     * Reakcja na nacisniecie przycisku ENTER w menu.
+     */
     protected void menuSubmitAction()
     {
         switch(this.buttonCursor)
@@ -58,6 +70,7 @@ public class MenuState extends State
                 break;
             case 2: //wyniki
                 State.setState(game.scoresState);
+                this.game.renewBestScoresTable();
                 break;
             case 3: //wyjdz
                 System.exit(0);

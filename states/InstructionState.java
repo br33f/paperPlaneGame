@@ -7,12 +7,21 @@ import game.Game;
 import game.Launcher;
 import gfx.ImageLoader;
 
+/**
+ * Klasa InstructionState ( opcja menu - instrukcje ).
+ * Rozszerza State.
+ */
 public class InstructionState extends State
 {
     //attributes
     public static BufferedImage background = ImageLoader.loadImage("/images/instructionsmenu.jpg");
 
     //methods
+
+    /**
+     * Konstruktor parametryczny klasy InstructionState.
+     * @param game obiekt Game
+     */
     public InstructionState(Game game)
     {
         super(game);
@@ -36,16 +45,4 @@ public class InstructionState extends State
         this.drawMenu(g);
     }
 
-    protected void menuSubmitAction()
-    {
-        switch(this.buttonCursor)
-        {
-            case 0: //cofnij
-                State.setState(game.menuState);
-                break;
-            case 1: //wyjdz
-                System.exit(0);
-                break;
-        }
-    }
 }
