@@ -26,7 +26,7 @@ public class GameoverState extends State {
     public GameoverState(Game game){
         super(game);
         this.buttonCursor = 0;
-        this.buttonNames = new String[] {"Menu", "Wyjdz"};
+        this.buttonNames = new String[] {"Zagraj ponownie", "Menu", "Wyjdz"};
         this.buttonHeight = 50;
         this.menuPosition = new int[] {230, 350};
 
@@ -57,4 +57,22 @@ public class GameoverState extends State {
         this.drawMenu(g);
     }
 
+    /**
+     * Reakcja na nacisniecie przycisku ENTER w gameOverState.
+     */
+    protected void menuSubmitAction()
+    {
+        switch(this.buttonCursor)
+        {
+            case 0: //zagraj ponownie
+                State.setState(game.gameState);
+                break;
+            case 1: //menu
+                State.setState(game.menuState);
+                break;
+            case 2: //wyjdz
+                System.exit(0);
+                break;
+        }
+    }
 }

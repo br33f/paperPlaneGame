@@ -10,7 +10,7 @@ import game.Score;
 import gfx.ImageLoader;
 
 /**
- * Klasa MenuState.
+ * Klasa MenuState odpowiadająca za obsługe głownego menu i jego wyświetlanie.
  * Rozszerza State.
  */
 public class MenuState extends State
@@ -22,7 +22,7 @@ public class MenuState extends State
 
     /**
      * Konstruktor parametryczny klasy MenuState.
-     * @param game obiekt Game.
+     * @param game obiekt klasy Game.
      */
     public MenuState(Game game)
 	{
@@ -41,7 +41,6 @@ public class MenuState extends State
 	@Override
 	public void render(Graphics g) 
 	{
-
 		g.setColor(Color.gray);
 		g.fillRect(0, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
 		g.drawImage(MenuState.background, 0, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT, null);

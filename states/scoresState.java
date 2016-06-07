@@ -8,13 +8,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
- * Created by br33 on 07.05.2016.
+ * Klasa ScoresState ( opcja menu - wyniki ).
+ * Rozszerza State.
  */
 public class ScoresState extends State {
     //attributes
     private ArrayList<ArrayList<String>> scoresTable = null;
 
     //methods
+
+    /**
+     * Konstruktor parametryczny klasy ScoresState.
+     * @param g obiekt Game
+     */
     public ScoresState(Game g)
     {
         super(g);
@@ -45,7 +51,7 @@ public class ScoresState extends State {
         g.drawString("Top 5", 230, 250);
 
         g.setFont(new Font("Yu Gothic", Font.PLAIN, 15));
-        if(this.scoresTable.size() == 0)
+        if(this.scoresTable == null || this.scoresTable.size() == 0)
             g.drawString("Brak połączenia z bazą danych.", 235, 270);
         else {
             for (int i = 1; i <= 5; i++) {
@@ -58,11 +64,20 @@ public class ScoresState extends State {
         this.drawMenu(g);
     }
 
+    /**
+     * Metoda aktualizuje tablice wyników, która znajduje się wewnątrz klasy.
+     * @param scoresTable tablica wyników, na która ma być zaktualizowana lokalna.
+     */
     public void setScoresTable(ArrayList<ArrayList<String>> scoresTable)
     {
         this.scoresTable = scoresTable;
     }
 
+    /**
+     * Metoda pobiera wynik o zadanym indeksie z tablicy wyników.
+     * @param position  indeks pozycji (zaczynajac od 1 - pierwszy wynik)
+     * @return tablica String'ów (wynik, nazwa)
+     */
     public ArrayList<String> getScore(int position)
     {
         if(position > 0 && position <= this.scoresTable.size())

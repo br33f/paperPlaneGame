@@ -13,7 +13,6 @@ public class Score
 	//attributes
 	public static int lastScore;
 	private int points;
-	private int counter;
 	//db config
 	protected Connector connector;
     //class instance
@@ -67,9 +66,7 @@ public class Score
     /**
      * Aktualizacja danych.
      */
-    public void tick()
-	{
-		this.counter++;
+    public void tick() {
 	}
 
     /**
@@ -141,7 +138,6 @@ public class Score
     public void resetScore()
     {
         this.points = 0;
-        this.counter = 0;
         Score.lastScore = 0;
     }
 

@@ -40,13 +40,11 @@ public class Game implements Runnable
     /**
      * Konstruktor parametryczny klasy Game
      * @param title tytuł gry (wyświetlany w nagłówku okienka)
-     * @param width szerokość okna gry
-     * @param height wysokość okna gry
      */
-    public Game(String title, int width, int height)
+    public Game(String title)
 	{
-		this.height = height;
-		this.width = width;
+		this.height = Launcher.WINDOW_HEIGHT;
+		this.width = Launcher.WINDOW_WIDTH;
 		this.title = title;
 		keyManager = new KeyManager();
 		this.score =  Score.getInstance();
@@ -139,7 +137,7 @@ public class Game implements Runnable
 			}
 			if(timer >= 1000000000)
 			{
-				System.out.println("FPS: " + ticks);
+				//System.out.println("FPS: " + ticks);
                 GameState.currentFps = ticks;
 				ticks = 0;
 				timer = 0.0;
