@@ -77,6 +77,19 @@ public class Score
 		return (this.connector.getDbAdapter() != null && this.connector.getDbAdapter().getDbConnection() != null) ? true : false;
 	}
 
+    /**
+     * Metoda sprawdza czy polaczenie z bazą danych jest aktywne.
+     * @return true/false (true - aktywne).
+     */
+    public boolean isValid(){
+        boolean returnedValue = false;
+        try {
+            returnedValue = this.connector.getDbAdapter().getDbConnection().isValid(5);
+        } catch (SQLException e) {
+            System.out.println("Polaczenie wygaslo.");
+        }
+        return returnedValue;
+    }
 
     /**
      * Metoda sprawdza pozycje gracza w rankingu.

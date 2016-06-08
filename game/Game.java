@@ -193,7 +193,7 @@ public class Game implements Runnable
     public void gameOver()
 	{
 		int playersPosition = this.score.getPlayerPosition();
-        if(this.score.isConnected() && playersPosition >= 1 && playersPosition <= 5) {
+        if(this.score.isConnected() && this.score.isValid() && playersPosition >= 1 && playersPosition <= 5) {
             this.score.addBestScore();
             this.renewBestScoresTable();
         }
