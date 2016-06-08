@@ -17,6 +17,7 @@ public class Obstacle extends Entity
 	public static int colors[][] = {{111,183,214},{187,214,111},{170,116,222},{215,178,113},{255,88,94},{222,117,174}};
 	private float speedX, speedY;
 	private int colorVariant;
+	private int sizeIncrementator = 0;
 	
 	//methods
 
@@ -105,6 +106,17 @@ public class Obstacle extends Entity
 	@Override
 	public void tick() 
 	{
+		//rozszerzanie obiektow przy spadaniu
+		if(sizeIncrementator == 20){
+			this.setX(this.getX() - 1);
+			this.setY(this.getY() - 1);
+			this.setWidth(this.getWidth() + 1);
+			this.setHeight(this.getHeight() + 1);
+			sizeIncrementator = 0;
+		}
+		else
+			sizeIncrementator++;
+
 		this.movement();
 	}
 

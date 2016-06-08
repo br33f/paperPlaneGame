@@ -68,7 +68,6 @@ public class Game implements Runnable
         scoresState = new ScoresState(this);
 
 		State.setState(menuState);
-		
 	}
 
     /**
@@ -137,7 +136,7 @@ public class Game implements Runnable
 			}
 			if(timer >= 1000000000)
 			{
-				//System.out.println("FPS: " + ticks);
+				System.out.println("FPS: " + ticks);
                 GameState.currentFps = ticks;
 				ticks = 0;
 				timer = 0.0;
@@ -193,7 +192,7 @@ public class Game implements Runnable
     public void gameOver()
 	{
 		int playersPosition = this.score.getPlayerPosition();
-        if(this.score.isConnected() && this.score.isValid() && playersPosition >= 1 && playersPosition <= 5) {
+        if(this.score.isConnected() && this.score.isValid() && playersPosition >= 1 && playersPosition <= 5 && Score.lastScore > 0 ) {
             this.score.addBestScore();
             this.renewBestScoresTable();
         }
